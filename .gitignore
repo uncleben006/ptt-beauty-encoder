@@ -1,0 +1,7 @@
+.env
+.env-prod
+venv
+user.txt
+static/temp
+.idea
+__pycache__

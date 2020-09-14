@@ -1,0 +1,2 @@
+datas/* filter=lfs diff=lfs merge=lfs -text
+static/star_datas/* filter=lfs diff=lfs merge=lfs -text

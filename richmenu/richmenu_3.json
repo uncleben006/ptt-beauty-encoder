@@ -1,0 +1,76 @@
+{
+    "size": {
+      "width": 2500,
+      "height": 1686
+    },
+    "selected": false,
+    "name": "richmenu_3",
+    "chatBarText": "查看更多資訊",
+    "areas": [
+      {
+        "bounds": {
+          "x": 19,
+          "y": 25,
+          "width": 754,
+          "height": 1024
+        },
+        "action": {
+          "type": "postback",
+          "text": "風格辨識",
+          "data": "action=tags"
+        }
+      },
+      {
+        "bounds": {
+          "x": 833,
+          "y": 19,
+          "width": 763,
+          "height": 1030
+        },
+        "action": {
+          "type": "postback",
+          "text": "相似照片",
+          "data": "action=photo"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1659,
+          "y": 6,
+          "width": 827,
+          "height": 1043
+        },
+        "action": {
+          "type": "postback",
+          "text": "明星臉預測",
+          "data": "action=star"
+        }
+      },
+      {
+        "bounds": {
+          "x": 32,
+          "y": 1116,
+          "width": 1290,
+          "height": 563
+        },
+        "action": {
+          "type": "postback",
+          "text": "回主選單",
+          "data": "action=main"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1421,
+          "y": 1113,
+          "width": 1040,
+          "height": 559
+        },
+        "action": {
+          "type": "postback",
+          "text": "上一頁",
+          "data": "action=return"
+        }
+      }
+    ]
+  }

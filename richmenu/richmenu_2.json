@@ -1,0 +1,76 @@
+{
+    "size": {
+      "width": 2500,
+      "height": 1686
+    },
+    "selected": true,
+    "name": "richmenu_2",
+    "chatBarText": "查看更多資訊",
+    "areas": [
+      {
+        "bounds": {
+          "x": 19,
+          "y": 19,
+          "width": 750,
+          "height": 1030
+        },
+        "action": {
+          "type": "postback",
+          "text": "預估推數",
+          "data": "action=push_number"
+        }
+      },
+      {
+        "bounds": {
+          "x": 839,
+          "y": 19,
+          "width": 846,
+          "height": 1030
+        },
+        "action": {
+          "type": "postback",
+          "text": "推文預測",
+          "data": "action=comments"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1736,
+          "y": 19,
+          "width": 750,
+          "height": 1033
+        },
+        "action": {
+          "type": "postback",
+          "text": "相似文章",
+          "data": "action=article"
+        }
+      },
+      {
+        "bounds": {
+          "x": 19,
+          "y": 1106,
+          "width": 1323,
+          "height": 566
+        },
+        "action": {
+          "type": "postback",
+          "text": "回主選單",
+          "data": "action=main"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1431,
+          "y": 1113,
+          "width": 1042,
+          "height": 573
+        },
+        "action": {
+          "type": "postback",
+          "text": "下一頁",
+          "data": "action=next"
+        }
+      }
+    ]
+  }
