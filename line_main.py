@@ -8,6 +8,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEve
 from json_compare import beauty_compare, get_vector, datas_arrage, star_compare, star_datas_arrage
 import json
 import os
+import random
 from dotenv import load_dotenv
 import redis
 
@@ -92,12 +93,13 @@ def handle_follow(event):
         event.reply_token, follow_text_message
     )
 
+
 # TODO: 顯示一些基本資訊，例如給用戶看我們的標籤網站或是請用戶打開圖文選單
-@handler.add(MessageEvent, message=TextMessage)
+@handler.add(MessageEvent, message = TextMessage)
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text = event.message.text))
 
 
 @handler.add(MessageEvent, message = ImageMessage)
@@ -128,23 +130,18 @@ def handle_image_message(event):
     beauty_result_datas = beauty_compare(beauty_datas, ens, locs)
 
     if beauty_result_datas:
-        data = beauty_result_datas[0]
-        r.set(user_id + ':push_num', data['push_num'])
+        data = beauty_result_datas[0]  # 取第一個配對到的臉
+        r.set(user_id + ':push_num', json.dumps(data['push_num'], ensure_ascii = False))
         r.set(user_id + ':comments', json.dumps(data['comments'], ensure_ascii = False))
-        r.set(user_id + ':post_slug', data['post_slug'])
-        r.set(user_id + ':post_title', data['post_title'])
+        r.set(user_id + ':post_slug', json.dumps(data['post_slug'], ensure_ascii = False))
+        r.set(user_id + ':post_title', json.dumps(data['post_title'], ensure_ascii = False))
         r.set(user_id + ':img_url', json.dumps(data['img_url'], ensure_ascii = False))
 
-        print(r.get(user_id + ':push_num'))
-        print(r.get(user_id + ':comments'))
-        print(r.get(user_id + ':post_slug'))
-        print(r.get(user_id + ':post_title'))
-        print(r.get(user_id + ':img_url'))
-
-        # comment = eval( str(r.get(user_id+':comment'), 'utf-8') )
-
-        # "status"  "content"
-        # print(comment[0]["status"],comment[0]["content"])
+        # print(r.get(user_id + ':push_num'))
+        # print(r.get(user_id + ':comments'))
+        # print(r.get(user_id + ':post_slug'))
+        # print(r.get(user_id + ':post_title'))
+        # print(r.get(user_id + ':img_url'))
 
     # 把配對到的明星臉資料存入 redis
     star_result_datas = star_compare(star_datas, ens, locs)
@@ -189,9 +186,18 @@ def handle_postback(event):
 
     if postback == "action=push_number":
         push_num = r.get(user_id + ':push_num')
-        print(push_num)
+        num = 0
         if push_num:
-            text = push_num
+            push_num = json.loads(push_num)
+            for push in push_num:
+                # print(push)
+                if push == '爆':
+                    push = 99
+                if push == 'XX':
+                    push = -99
+                num += int(push)
+            num = int(num / len(push_num))
+            text = str(num)
         else:
             text = '0'
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))

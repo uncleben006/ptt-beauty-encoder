@@ -5,22 +5,42 @@
 import numpy as np
 import face_recognition
 
-
+# 用戶傳進來的照片可能會有多張圖，所以 beauty_compare 會回傳陣列，陣列裡面的 dictionary 包含的陣列是前五個最像的文章
+# result_datas = [
+#     {
+#         'post_title': [...],
+#         'img_url': [...],
+#         'post_slug': [...],
+#         'push_num': [...],
+#         'comments': [...]
+#     },
+#     {
+#         'post_title': [...],
+#         'img_url': [...],
+#         'post_slug': [...],
+#         'push_num': [...],
+#         'comments': [...]
+#     }
+#     ...
+# ]
 # 使用用戶臉部向量搜尋 json 檔內最接近的向量，並回傳 標題 圖片網址 slug 推文數 留言內容
 def beauty_compare(datas, ens, locs):
     if ens:
         result_datas = []
         for en in ens:
             distances = face_recognition.face_distance(en, datas['vectors'])
-            index = distances.argmin()
+            # index = distances.argmin()
+            sim_post = distances.argsort()[:5] # 取得 distances 距離最小前五篇
 
-            result_dict = {}
-            result_dict['post_title'] = datas['titles'][index]
-            result_dict['img_url'] = datas['imgs'][index]
-            result_dict['post_slug'] = datas['slugs'][index]
-            result_dict['push_num'] = datas['push'][index]
-            result_dict['comments'] = datas['comments'][index]
+            result_dict = {'post_title': [], 'img_url': [], 'post_slug': [], 'push_num': [], 'comments': []}
+            for index in sim_post:
+                result_dict['post_title'].append(datas['titles'][index])
+                result_dict['img_url'].append(datas['imgs'][index])
+                result_dict['post_slug'].append(datas['slugs'][index])
+                result_dict['push_num'].append(datas['push'][index])
+                result_dict['comments'].append(datas['comments'][index])
             result_datas.append(result_dict)
+            # print(result_datas)
 
         return result_datas
 
