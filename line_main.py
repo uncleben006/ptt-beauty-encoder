@@ -227,7 +227,7 @@ def handle_postback(event):
         if slugs:
             slugs = json.loads(slugs)
             text = ''
-            for slug in slugs:
+            for slug in slugs[:3]:
                 text += 'https://www.ptt.cc/bbs/Beauty/' + slug.replace('_', '.') + '.html\n\n'
             text = text[:-2]
         else:
@@ -239,21 +239,37 @@ def handle_postback(event):
 
     if postback == "action=photo":
         img_url = r.get(user_id + ':img_url')
+        post_title = r.get(user_id + ':post_title')
+        slugs = r.get(user_id + ':post_slug')
         print(img_url)
-        if img_url:
-            img_url = img_url[1:-1]
-            text = img_url
+        if img_url and post_title and slugs:
+            img_url = json.loads(img_url)
+            # post_title = json.loads(post_title)
+            # slugs = json.loads(slugs)
+            # post_title = post_title[0]
+            # slug = slugs[0]
+            # text = post_title + '\n\n' + 'https://www.ptt.cc/bbs/Beauty/' + slug.replace('_', '.') + '.html'
+            text = '與下列圖片相似'
         else:
             text = '沒有相似照片'
 
+        # TODO: 做成 ImageCarousel
         print(img_url)
         line_bot_api.reply_message(
             event.reply_token,
             [
                 TextSendMessage(text = text),
                 ImageSendMessage(
-                    original_content_url = str(img_url),
-                    preview_image_url = str(img_url)
+                    original_content_url = str(img_url[0]),
+                    preview_image_url = str(img_url[0])
+                ),
+                ImageSendMessage(
+                    original_content_url = str(img_url[1]),
+                    preview_image_url = str(img_url[1])
+                ),
+                ImageSendMessage(
+                    original_content_url = str(img_url[2]),
+                    preview_image_url = str(img_url[2])
                 )
             ]
         )
