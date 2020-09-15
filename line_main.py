@@ -239,16 +239,9 @@ def handle_postback(event):
 
     if postback == "action=photo":
         img_url = r.get(user_id + ':img_url')
-        post_title = r.get(user_id + ':post_title')
-        slugs = r.get(user_id + ':post_slug')
         print(img_url)
-        if img_url and post_title and slugs:
+        if img_url:
             img_url = json.loads(img_url)
-            # post_title = json.loads(post_title)
-            # slugs = json.loads(slugs)
-            # post_title = post_title[0]
-            # slug = slugs[0]
-            # text = post_title + '\n\n' + 'https://www.ptt.cc/bbs/Beauty/' + slug.replace('_', '.') + '.html'
             text = '與下列圖片相似'
         else:
             text = '沒有相似照片'
