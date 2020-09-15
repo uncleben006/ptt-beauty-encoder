@@ -95,11 +95,11 @@ def handle_follow(event):
 
 
 # TODO: 顯示一些基本資訊，例如給用戶看我們的標籤網站或是請用戶打開圖文選單
-@handler.add(MessageEvent, message = TextMessage)
-def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text = event.message.text))
+# @handler.add(MessageEvent, message = TextMessage)
+# def handle_message(event):
+#     line_bot_api.reply_message(
+#         event.reply_token,
+#         TextSendMessage(text = event.message.text))
 
 
 @handler.add(MessageEvent, message = ImageMessage)
@@ -204,12 +204,19 @@ def handle_postback(event):
 
     if postback == "action=comments":
         comments = r.get(user_id + ':comments')
-        print(comments)
         if comments:
             comments = json.loads(comments)
             text = ''
-            for comment in comments[:10]:
+            result_comment = []
+            # 每篇取出亂數 10 則留言出來
+            for comment in comments:
+                result_comment += random.sample(comment, 10)
+
+            # 打亂並取 10 則留言出來當作留言
+            # random.shuffle(result_comment)
+            for comment in random.sample(result_comment, 10):
                 text += comment['comment_id'] + ':' + comment['content'] + '\n'
+                print(comment)
             text = text[:-2]
         else:
             text = '沒有推文'

@@ -18,7 +18,7 @@ import face_recognition
 #         'post_title': [...],
 #         'img_url': [...],
 #         'post_slug': [...],
-#         'push_num': [...],
+#         'push_num': [99,32,45,21,99],
 #         'comments': [...]
 #     }
 #     ...
