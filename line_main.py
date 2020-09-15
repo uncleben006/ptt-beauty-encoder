@@ -223,10 +223,13 @@ def handle_postback(event):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
     if postback == "action=article":
-        article = r.get(user_id + ':post_slug')
-        print(article)
-        if article:
-            text = 'https://www.ptt.cc/bbs/Beauty/' + article.replace('_', '.') + '.html'
+        slugs = r.get(user_id + ':post_slug')
+        if slugs:
+            slugs = json.loads(slugs)
+            text = ''
+            for slug in slugs:
+                text += 'https://www.ptt.cc/bbs/Beauty/' + slug.replace('_', '.') + '.html\n\n'
+            text = text[:-2]
         else:
             text = '沒有相似文章'
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))

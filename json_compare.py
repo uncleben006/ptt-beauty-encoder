@@ -8,17 +8,17 @@ import face_recognition
 # 用戶傳進來的照片可能會有多張圖，所以 beauty_compare 會回傳陣列，陣列裡面的 dictionary 包含的陣列是前五個最像的文章
 # result_datas = [
 #     {
-#         'post_title': [...],
-#         'img_url': [...],
-#         'post_slug': [...],
-#         'push_num': [...],
-#         'comments': [...]
+#         'post_title': ["正妹..."],
+#         'img_url': ["https://imgur...",...],
+#         'post_slug': ["M_1592062527_A_038",...],
+#         'push_num': [99,32,45,21,99],
+#         'comments': [ [ {'status': '推', 'comment_id': 'a3312393', 'content': '日本c是歡樂杯嗎', 'ip': '175.97.4.226', 'comment_time': '02/05 15:45'},... ],[...] ]
 #     },
 #     {
 #         'post_title': [...],
 #         'img_url': [...],
 #         'post_slug': [...],
-#         'push_num': [99,32,45,21,99],
+#         'push_num': [...],
 #         'comments': [...]
 #     }
 #     ...
