@@ -41,6 +41,7 @@ with open(os.path.join(os.getcwd(), 'datas/star_datas.json'), 'r', encoding = "u
 with open(os.path.join(os.getcwd(), 'datas/star_name.json'), 'r', encoding = "utf-8") as jsonfile:
     star_name_dict = json.load(jsonfile)
 
+
 @app.route("/")
 def index():
     return 'Hello'
@@ -199,7 +200,8 @@ def handle_postback(event):
             comments = json.loads(comments)
             text = ''
             result_comment = []
-            # 每篇取出亂數 10 則留言出來
+
+            # 取出所有 po 文的留言
             for comment in comments:
                 result_comment += comment
 
@@ -226,7 +228,31 @@ def handle_postback(event):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
     if postback == "action=tags":
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "尚無此像功能"))
+        comments = r.get(user_id + ':comments')
+        if comments:
+            comments = json.loads(comments)
+            text = ''
+
+            result_tags = []
+            # 取出所有 po 文的留言
+            for comment in comments:
+                for c in comment:
+                    print(c['tag'], end = ' ')
+                    result_tags.append(c['tag'])
+
+            # 找出所有留言的 tag 並且整理出風格平均
+            result_average = {}
+            for tag in set(result_tags):
+                score = round(result_tags.count(tag) / len(result_tags) * 100, 2)
+                result_average[tag] = score
+            result_average = sorted(result_average.items(), key = lambda item: item[1], reverse=True)
+
+            for tag, score in result_average:
+                text += tag + ': ' + str(score) + '%\n'
+            text = text[:-2]
+        else:
+            text = '無法預測風格'
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
     if postback == "action=photo":
         img_url = r.get(user_id + ':img_url')
@@ -270,7 +296,8 @@ def handle_postback(event):
         print(star_distance)
         if star_img and star_name:
             img_url = os.path.join(os.getenv('BASE_URL'), 'static', 'star_datas', star_name, star_img)
-            text = '你的臉與 ' + star_name_dict[star_name] + ' 最像\n\n相似度: ' + str(round(((1 - float(star_distance)) * 100), 2)) + '%'
+            text = '你的臉與 ' + star_name_dict[star_name] + ' 最像\n\n相似度: ' + str(
+                round(((1 - float(star_distance)) * 100), 2)) + '%'
             line_bot_api.reply_message(
                 event.reply_token,
                 [
