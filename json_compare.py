@@ -59,7 +59,6 @@ def beauty_compare(datas, ens, locs):
 def star_compare(datas, ens, locs):
     if ens:
         result_datas = []
-        print(datas)
         for en in ens:
             distances = face_recognition.face_distance(en, datas['vectors'])
             index = distances.argmin()
@@ -102,10 +101,9 @@ def star_datas_arrage(json_datas):
     datas = {'star_name': [], 'star_img': [], 'vectors': []}
     for data in json_datas:
         if 'face_vector' in data:
-            for vct in data['face_vector']:
-                datas['star_name'].append(data['name'])
-                datas['star_img'].append(data['img'])
-                datas['vectors'].append(vct)
+            datas['star_name'].append(data['name'])
+            datas['star_img'].append(data['img'])
+            datas['vectors'].append(data['face_vector'])
 
     datas['vectors'] = np.array([np.array(vector) for vector in datas['vectors']])
     return datas

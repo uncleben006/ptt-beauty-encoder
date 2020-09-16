@@ -30,7 +30,7 @@ SUB_RICH_MENU_ID_A = os.getenv('RICHMENU_2')
 SUB_RICH_MENU_ID_B = os.getenv('RICHMENU_3')
 
 # Load beauty data
-with open(os.path.join(os.getcwd(), 'datas/data_add_face_vector_all_update.json'), 'r', encoding = "utf-8") as jsonfile:
+with open(os.path.join(os.getcwd(), 'datas/datas_final.json'), 'r', encoding = "utf-8") as jsonfile:
     beauty_datas = datas_arrage(json.load(jsonfile))
 
 # Load star data
@@ -39,10 +39,7 @@ with open(os.path.join(os.getcwd(), 'datas/star_datas.json'), 'r', encoding = "u
 
 # Load star name
 with open(os.path.join(os.getcwd(), 'datas/star_name.json'), 'r', encoding = "utf-8") as jsonfile:
-    star_name = star_datas_arrage(json.load(jsonfile))
-
-print(star_datas)
-
+    star_name_dict = json.load(jsonfile)
 
 @app.route("/")
 def index():
@@ -210,7 +207,9 @@ def handle_postback(event):
             result_comment = []
             # 每篇取出亂數 10 則留言出來
             for comment in comments:
-                result_comment += random.sample(comment, 10)
+                random.shuffle(comment)
+                result_comment += comment[:10]
+                # result_comment += random.sample(comment, 10)
 
             # 打亂並取 10 則留言出來當作留言
             # random.shuffle(result_comment)
@@ -277,7 +276,7 @@ def handle_postback(event):
         print(star_distance)
         if star_img and star_name:
             img_url = os.path.join(os.getenv('BASE_URL'), 'static', 'star_datas', star_name, star_img)
-            text = '你的臉與 ' + star_name + ' 最像\n\n相似度: ' + str(round(((1 - float(star_distance)) * 100), 2)) + '%'
+            text = '你的臉與 ' + star_name_dict[star_name] + ' 最像\n\n相似度: ' + str(round(((1 - float(star_distance)) * 100), 2)) + '%'
         else:
             text = "找不到相似的明星"
         line_bot_api.reply_message(
