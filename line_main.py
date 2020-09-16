@@ -134,12 +134,6 @@ def handle_image_message(event):
         r.set(user_id + ':post_title', json.dumps(data['post_title'], ensure_ascii = False))
         r.set(user_id + ':img_url', json.dumps(data['img_url'], ensure_ascii = False))
 
-        # print(r.get(user_id + ':push_num'))
-        # print(r.get(user_id + ':comments'))
-        # print(r.get(user_id + ':post_slug'))
-        # print(r.get(user_id + ':post_title'))
-        # print(r.get(user_id + ':img_url'))
-
     # 把配對到的明星臉資料存入 redis
     star_result_datas = star_compare(star_datas, ens, locs)
 
@@ -207,14 +201,12 @@ def handle_postback(event):
             result_comment = []
             # 每篇取出亂數 10 則留言出來
             for comment in comments:
-                random.shuffle(comment)
-                result_comment += comment[:10]
-                # result_comment += random.sample(comment, 10)
+                result_comment += comment
 
             # 打亂並取 10 則留言出來當作留言
             # random.shuffle(result_comment)
             for comment in random.sample(result_comment, 10):
-                text += comment['comment_id'] + ':' + comment['content'] + '\n'
+                text += comment['status'] + ': ' + comment['content'] + '\n'
                 print(comment)
             text = text[:-2]
         else:
