@@ -242,29 +242,31 @@ def handle_postback(event):
         if img_url:
             img_url = json.loads(img_url)
             text = '與下列圖片相似'
+            # TODO: 做成 ImageCarousel
+            line_bot_api.reply_message(
+                event.reply_token,
+                [
+                    TextSendMessage(text = text),
+                    ImageSendMessage(
+                        original_content_url = str(img_url[0]),
+                        preview_image_url = str(img_url[0])
+                    ),
+                    ImageSendMessage(
+                        original_content_url = str(img_url[1]),
+                        preview_image_url = str(img_url[1])
+                    ),
+                    ImageSendMessage(
+                        original_content_url = str(img_url[2]),
+                        preview_image_url = str(img_url[2])
+                    )
+                ]
+            )
         else:
             text = '沒有相似照片'
-
-        # TODO: 做成 ImageCarousel
-        print(img_url)
-        line_bot_api.reply_message(
-            event.reply_token,
-            [
+            line_bot_api.reply_message(
+                event.reply_token,
                 TextSendMessage(text = text),
-                ImageSendMessage(
-                    original_content_url = str(img_url[0]),
-                    preview_image_url = str(img_url[0])
-                ),
-                ImageSendMessage(
-                    original_content_url = str(img_url[1]),
-                    preview_image_url = str(img_url[1])
-                ),
-                ImageSendMessage(
-                    original_content_url = str(img_url[2]),
-                    preview_image_url = str(img_url[2])
-                )
-            ]
-        )
+            )
 
     if postback == "action=star":
 
@@ -277,18 +279,22 @@ def handle_postback(event):
         if star_img and star_name:
             img_url = os.path.join(os.getenv('BASE_URL'), 'static', 'star_datas', star_name, star_img)
             text = '你的臉與 ' + star_name_dict[star_name] + ' 最像\n\n相似度: ' + str(round(((1 - float(star_distance)) * 100), 2)) + '%'
+            line_bot_api.reply_message(
+                event.reply_token,
+                [
+                    TextSendMessage(text = text),
+                    ImageSendMessage(
+                        original_content_url = str(img_url),
+                        preview_image_url = str(img_url)
+                    )
+                ]
+            )
         else:
             text = "找不到相似的明星"
-        line_bot_api.reply_message(
-            event.reply_token,
-            [
+            line_bot_api.reply_message(
+                event.reply_token,
                 TextSendMessage(text = text),
-                ImageSendMessage(
-                    original_content_url = str(img_url),
-                    preview_image_url = str(img_url)
-                )
-            ]
-        )
+            )
 
 
 if __name__ == "__main__":
