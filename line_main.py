@@ -210,7 +210,7 @@ def handle_postback(event):
             for comment in random.sample(result_comment, 10):
                 text += comment['status'] + ': ' + comment['content'] + '\n'
                 print(comment)
-            text = text[:-2]
+            text = text[:-1]
         else:
             text = '沒有推文'
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
@@ -249,7 +249,7 @@ def handle_postback(event):
 
             for tag, score in result_average:
                 text += tag + ': ' + str(score) + '%\n'
-            text = text[:-2]
+            text = text[:-1]
         else:
             text = '無法預測風格'
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
