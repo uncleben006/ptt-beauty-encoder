@@ -4,13 +4,14 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, ImageMessage, PostbackEvent,\
-    ImageSendMessage
+    ImageSendMessage, FlexSendMessage
 from json_compare import beauty_compare, get_vector, datas_arrage, star_compare, star_datas_arrage
 import json
 import os
 import random
 from dotenv import load_dotenv
 import redis
+from flex_messages import get_comments
 
 # start app
 app = Flask(__name__)
@@ -30,7 +31,7 @@ SUB_RICH_MENU_ID_A = os.getenv('RICHMENU_2')
 SUB_RICH_MENU_ID_B = os.getenv('RICHMENU_3')
 
 # Load beauty data
-with open(os.path.join(os.getcwd(), 'datas/datas_final.json'), 'r', encoding = "utf-8") as jsonfile:
+with open(os.path.join(os.getcwd(), 'datas/datas_light.json'), 'r', encoding = "utf-8") as jsonfile:
     beauty_datas = datas_arrage(json.load(jsonfile))
 
 # Load star data
@@ -207,13 +208,14 @@ def handle_postback(event):
 
             # 打亂並取 10 則留言出來當作留言
             # random.shuffle(result_comment)
-            for comment in random.sample(result_comment, 10):
-                text += comment['status'] + ': ' + comment['content'] + '\n'
-                print(comment)
-            text = text[:-1]
+            comments_flex_message = get_comments(random.sample(result_comment, 10))
+            # for comment in random.sample(result_comment, 10):
+            #     text += comment['status'] + ': ' + comment['content'] + '\n'
+            #     print(comment)
+            line_bot_api.reply_message(event.reply_token, FlexSendMessage(alt_text='留言預測', contents= comments_flex_message))
         else:
             text = '沒有推文'
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
     if postback == "action=article":
         slugs = r.get(user_id + ':post_slug')
