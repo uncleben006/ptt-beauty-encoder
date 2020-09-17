@@ -12,6 +12,9 @@ import random
 from dotenv import load_dotenv
 import redis
 from flex_messages import get_comments
+import glob
+from flask import render_template
+from flask_paginate import Pagination, get_page_parameter
 
 # start app
 app = Flask(__name__)
@@ -46,6 +49,17 @@ with open(os.path.join(os.getcwd(), 'datas/star_name.json'), 'r', encoding = "ut
 @app.route("/")
 def index():
     return 'Hello'
+
+
+@app.route("/images")
+def images():
+    images = glob.glob("static/temp/*")
+    page = request.args.get(get_page_parameter(), type = int, default = 1)
+    pagination = Pagination(page = page, total = len(images), record_name = 'images')
+    images = [os.path.join(os.getenv('BASE_URL'), image) for image in images][(page-1)*pagination.per_page:page*pagination.per_page]
+
+
+    return render_template('images.html', images = images, css_framework='bootstrap', bs_version=4, pagination = pagination)
 
 
 @app.route("/callback", methods = ['POST'])
@@ -212,7 +226,8 @@ def handle_postback(event):
             # for comment in random.sample(result_comment, 10):
             #     text += comment['status'] + ': ' + comment['content'] + '\n'
             #     print(comment)
-            line_bot_api.reply_message(event.reply_token, FlexSendMessage(alt_text='留言預測', contents= comments_flex_message))
+            line_bot_api.reply_message(event.reply_token,
+                                       FlexSendMessage(alt_text = '留言預測', contents = comments_flex_message))
         else:
             text = '沒有推文'
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
@@ -247,7 +262,7 @@ def handle_postback(event):
             for tag in set(result_tags):
                 score = round(result_tags.count(tag) / len(result_tags) * 100, 2)
                 result_average[tag] = score
-            result_average = sorted(result_average.items(), key = lambda item: item[1], reverse=True)
+            result_average = sorted(result_average.items(), key = lambda item: item[1], reverse = True)
 
             for tag, score in result_average:
                 text += tag + ': ' + str(score) + '%\n'

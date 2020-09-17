@@ -23,6 +23,7 @@ RUN pip3 install --upgrade pip && \
     pip install dlib && \
     pip install face_recognition && \
     pip install flask && \
+    pip install flask-paginate && \
     pip install line-bot-sdk && \
     pip install uwsgi && \
     pip install python-dotenv && \
