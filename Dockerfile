@@ -33,7 +33,7 @@ RUN apt-get install -y software-properties-common && \
     add-apt-repository universe && \
     add-apt-repository ppa:certbot/certbot && \
     apt-get update && \
-    apt-get install certbot python-certbot-nginx
+    apt-get install -y certbot python-certbot-nginx
 
 COPY ./ptt_nginx.conf /etc/nginx/sites-available/ptt_nginx.conf
 COPY . /usr/src/app
