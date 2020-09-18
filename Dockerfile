@@ -13,11 +13,6 @@ RUN apt-get update && \
     apt-get install -y python3-pip
 
 RUN pip3 install --upgrade pip && \
-#    pip install scikit-build && \
-#    pip install opencv-python && \
-#    pip install tensorflow && \
-#    pip install mtcnn && \
-#    pip install matplotlib && \
     pip install wheel && \
     pip install cmake && \
     pip install dlib && \

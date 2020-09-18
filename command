@@ -6,9 +6,11 @@ docker build . -t uncleben006/beauty-line-bot
 docker push uncleben006/beauty-line-bot
 
 # pull and run on the cloud
-docker run -it --name beauty-line-bot -p 80:80 -p 443:443 -e LC_ALL=C.UTF-8 uncleben006/beauty-line-bot bash
-
-uwsgi uwsgi.ini
-service nginx start
-/etc/init.d/redis-server start
+docker run -it -d --name beauty-line-bot \
+-p 80:80 -p 443:443 \
+-e LC_ALL=C.UTF-8 \
+-v ~/temp:/usr/src/app/static/temp \
+-v ~/ptt_nginx.conf:/etc/nginx/sites-available/ptt_nginx.conf \
+-v ~/letsencrypt:/etc/letsencrypt \
+uncleben006/beauty-line-bot bash
 

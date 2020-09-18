@@ -30,7 +30,8 @@
     <div class="card-columns">
         {% for image in images %}
             <div class="card">
-                <img class="card-img" src="{{ image }}" alt="Card image">
+                <img class="card-img rounded-0" src="{{ url }}{{ image }}" alt="Card image">
+                <a href="/delete/{{ image }}?page={{ page }}&password={{ password }}" class="rounded-0 btn btn-danger btn-block">Delete this image</a>
             </div>
         {% endfor %}
     </div>

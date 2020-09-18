@@ -96,7 +96,8 @@ def datas_arrage(json_datas):
     # 刪除非必要的 tag
     for comments in datas['comments']:
         for index, comment in enumerate(comments):
-            if comment['tag'] in ['雜訊', '親友團', '腿', '腰', '777', '男友', '學生', '道歉', '垃圾', '身材', '誇張', '服裝', '樓', '頭髮', '醜', '人名' ]:
+            if comment['tag'] in ['雜訊', '親友團', '腿', '腰', '777', '男友', '學生', '道歉', '垃圾', '身材', '誇張', '服裝', '樓', '頭髮',
+                                  '醜', '人名']:
                 # print(index)
                 # print(comment['tag'])
                 comments.pop(index)
