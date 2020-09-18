@@ -242,11 +242,7 @@ def handle_postback(event):
                 result_comment += comment
 
             # 打亂並取 10 則留言出來當作留言
-            # random.shuffle(result_comment)
             comments_flex_message = get_comments(random.sample(result_comment, 10))
-            # for comment in random.sample(result_comment, 10):
-            #     text += comment['status'] + ': ' + comment['content'] + '\n'
-            #     print(comment)
             line_bot_api.reply_message(event.reply_token,
                                        FlexSendMessage(alt_text = '留言預測', contents = comments_flex_message))
         else:
@@ -276,7 +272,8 @@ def handle_postback(event):
             for comment in comments:
                 for i, c in enumerate(comment):
                     # 如果風格不符合以下這些標籤，就移除該則留言
-                    if c['tag'] in ['可愛', '清秀', '年輕', '仙女', '健康', '騷包', '塑膠', '修圖', '素顏', '童顏']:
+                    if c['tag'] in ['可愛', '清秀', '年輕', '仙女', '健康', '騷包', '塑膠', '修圖', '素顏', '童顏',
+                                    '女神', '美', '正', '普', '男的', '門', '推']:
                         print(c['tag'], end = ' ')
                         result_tags.append(c['tag'])
 
