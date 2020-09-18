@@ -64,8 +64,9 @@ def images():
     pagination = Pagination(page = page, total = len(images), record_name = 'images', bs_version = 4)
     url = os.getenv('BASE_URL')
     # images = [os.path.join(os.getenv('BASE_URL'), image) for image in images][(page-1)*pagination.per_page:page*pagination.per_page]
-    images = images[(page-1)*pagination.per_page:page*pagination.per_page]
-    return render_template('images.html', images = images, pagination = pagination, url = url, page=page, password=password)
+    images = images[(page - 1) * pagination.per_page:page * pagination.per_page]
+    return render_template('images.html', images = images, pagination = pagination, url = url, page = page,
+                           password = password)
 
 
 @app.route("/delete/static/temp/<img_name>")
@@ -234,6 +235,10 @@ def handle_postback(event):
 
             # 取出所有 po 文的留言
             for comment in comments:
+                for i, c in enumerate(comment):
+                    if c['tag'] not in ['我婆', '戀愛', '女神', '美', '正', '普', '喜歡', '學生', '可以', '醜', '男的', '頭髮', '牙齒', '鼻子',
+                                        '門', '推', '誇張', '驚嘆']:
+                        comment.pop(i)
                 result_comment += comment
 
             # 打亂並取 10 則留言出來當作留言
@@ -269,9 +274,11 @@ def handle_postback(event):
             result_tags = []
             # 取出所有 po 文的留言
             for comment in comments:
-                for c in comment:
-                    print(c['tag'], end = ' ')
-                    result_tags.append(c['tag'])
+                for i, c in enumerate(comment):
+                    # 如果風格不符合以下這些標籤，就移除該則留言
+                    if c['tag'] in ['可愛', '清秀', '年輕', '仙女', '健康', '騷包', '塑膠', '修圖', '素顏', '童顏']:
+                        print(c['tag'], end = ' ')
+                        result_tags.append(c['tag'])
 
             # 找出所有留言的 tag 並且整理出風格平均
             result_average = {}
