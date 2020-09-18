@@ -24,18 +24,20 @@
 </style>
 
 <div class="container">
-    <div class="mt-5"><h1>這裡可以偷偷看到大家傳什麼圖ㄎㄎ</h1></div>
-    {{ pagination.info }}
+    <div class="mt-5"><h1>大家上傳的圖</h1></div>
+{#    {{ pagination.info }}#}
     {{ pagination.links }}
     <div class="card-columns">
         {% for image in images %}
             <div class="card">
                 <img class="card-img rounded-0" src="{{ url }}{{ image }}" alt="Card image">
+                {% if password %}
                 <a href="/delete/{{ image }}?page={{ page }}&password={{ password }}" class="rounded-0 btn btn-danger btn-block">Delete this image</a>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
-    {{ pagination.info }}
+{#    {{ pagination.info }}#}
     {{ pagination.links }}
 </div>
 

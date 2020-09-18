@@ -53,17 +53,18 @@ def index():
 
 @app.route("/images")
 def images():
-    password = request.args.get('password')
-    print(password)
-    print(os.getenv('PASSWORD'))
-    if password != os.getenv('PASSWORD'):
-        return redirect(url_for('index'))
+    if request.args.get('password'):
+        if request.args.get('password') == os.getenv('PASSWORD'):
+            password = request.args.get('password')
+        else:
+            password = None
+    else:
+        password = None
 
     images = glob.glob("static/temp/*")
     page = request.args.get(get_page_parameter(), type = int, default = 1)
     pagination = Pagination(page = page, total = len(images), record_name = 'images', bs_version = 4)
     url = os.getenv('BASE_URL')
-    # images = [os.path.join(os.getenv('BASE_URL'), image) for image in images][(page-1)*pagination.per_page:page*pagination.per_page]
     images = images[(page - 1) * pagination.per_page:page * pagination.per_page]
     return render_template('images.html', images = images, pagination = pagination, url = url, page = page,
                            password = password)
