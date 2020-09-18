@@ -25,7 +25,7 @@
 
 <div class="container">
     <div class="mt-5"><h1>大家上傳的圖</h1></div>
-{#    {{ pagination.info }}#}
+    {{ pagination.info }}
     {{ pagination.links }}
     <div class="card-columns">
         {% for image in images %}
@@ -37,30 +37,9 @@
             </div>
         {% endfor %}
     </div>
-{#    {{ pagination.info }}#}
+    {{ pagination.info }}
     {{ pagination.links }}
 </div>
-
-{#<nav aria-label="Page navigation example">#}
-{##}
-{#    <ul class="pagination">#}
-{#        <li class="page-item">#}
-{#            <a class="page-link" href="#" aria-label="Previous">#}
-{#                <span aria-hidden="true">&laquo;</span>#}
-{#                <span class="sr-only">Previous</span>#}
-{#            </a>#}
-{#        </li>#}
-{#        {% for link in pagination.links %}#}
-{#            <li class="page-item"><a class="page-link" href="{{ link }}">{{ link }}</a></li>#}
-{#        {% endfor %}#}
-{#        <li class="page-item">#}
-{#            <a class="page-link" href="#" aria-label="Next">#}
-{#                <span aria-hidden="true">&raquo;</span>#}
-{#                <span class="sr-only">Next</span>#}
-{#            </a>#}
-{#        </li>#}
-{#    </ul>#}
-{#</nav>#}
 
 
 <!-- Optional JavaScript -->
