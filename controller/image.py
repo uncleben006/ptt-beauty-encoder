@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*
-
-# $ pip3 install face_recognition or $ git clone git://github.com/ageitgey/face_recognition
-
+import os
+import json
 import numpy as np
 import face_recognition
+from dotenv import load_dotenv
 
+# line sdk
+load_dotenv(os.path.join(os.getcwd(), '.env'))
+from linebot import LineBotApi, WebhookHandler
+line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 
 # 用戶傳進來的照片可能會有多張圖，所以 beauty_compare 會回傳陣列，陣列裡面的 dictionary 包含的陣列是前五個最像的文章
 # result_datas = [
@@ -122,3 +126,12 @@ def star_datas_arrage(json_datas):
 
     datas['vectors'] = np.array([np.array(vector) for vector in datas['vectors']])
     return datas
+
+
+def save_image(message_id):
+    content_file = line_bot_api.get_message_content(message_id = message_id)
+    img_path = os.path.join(os.getcwd(), 'static/temp/' + message_id + '.jpg')
+    with open(img_path, 'wb') as tempfile:
+        for chunk in content_file.iter_content():
+            tempfile.write(chunk)
+    return img_path

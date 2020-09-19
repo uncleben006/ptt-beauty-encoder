@@ -1,22 +1,28 @@
 # -*- coding: utf-8 -*
 
-from flask import Flask, request, abort, redirect, url_for
-from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, ImageMessage, PostbackEvent,\
-    ImageSendMessage, FlexSendMessage
-
-from helpers.utils import transfer_push_num
-from json_compare import beauty_compare, get_vector, datas_arrage, star_compare, star_datas_arrage
-import json
 import os
+import json
+import glob
+import redis
 import random
 from dotenv import load_dotenv
-import redis
-from flex_messages import get_comments
-import glob
+
+# flask
+from flask import Flask, request, abort, redirect, url_for
 from flask import render_template
 from flask_paginate import Pagination, get_page_parameter
+
+# line sdk
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextSendMessage, \
+    FollowEvent, ImageMessage, PostbackEvent, \
+    ImageSendMessage, FlexSendMessage
+
+# custom module
+from helpers.utils import transfer_push_num
+from controller.image import beauty_compare, get_vector, datas_arrage, star_compare, star_datas_arrage, save_image
+from flex_messages.get_comments import get_comments
 
 # start app
 app = Flask(__name__)
@@ -150,18 +156,13 @@ def handle_image_message(event):
 
     # save image
     message_id = event.message.id
-    content_file = line_bot_api.get_message_content(message_id = message_id)
-    img_path = os.path.join(os.getcwd(), 'static/temp/' + message_id + '.jpg')
-    with open(img_path, 'wb') as tempfile:
-        for chunk in content_file.iter_content():
-            tempfile.write(chunk)
+    img_path = save_image(message_id)
 
     # start predict
     ens, locs = get_vector(img_path)
 
     # 把配對到的表特資料存入 redis 裡
     beauty_result_datas = beauty_compare(beauty_datas, ens, locs)
-
     if beauty_result_datas:
         data = beauty_result_datas[0]  # 取第一個配對到的臉
         r.set(user_id + ':push_num', json.dumps(data['push_num'], ensure_ascii = False))
@@ -172,15 +173,11 @@ def handle_image_message(event):
 
     # 把配對到的明星臉資料存入 redis
     star_result_datas = star_compare(star_datas, ens, locs)
-
     if star_result_datas:
         data = star_result_datas[0]
         r.set(user_id + ':star_name', data['star_name'])
         r.set(user_id + ':star_img', data['star_img'])
         r.set(user_id + ':star_distance', data['star_distance'])
-        print(r.get(user_id + ':star_name'))
-        print(r.get(user_id + ':star_img'))
-        print(r.get(user_id + ':star_distance'))
 
 
 @handler.add(PostbackEvent)
