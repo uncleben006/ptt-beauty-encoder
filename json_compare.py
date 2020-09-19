@@ -86,6 +86,12 @@ def datas_arrage(json_datas):
     for data in json_datas:
         if 'face_vector' in data:
             for url, vct in data['face_vector'].items():
+
+                # skip specific post - request by Niels because he think this post have too many negative comments
+                if data['slug'] in ['M.1587952919.A.C7B']:
+                    print(data['slug'])
+                    continue
+
                 datas['titles'].append(data['title'])
                 datas['slugs'].append(data['slug'])
                 datas['push'].append(data['push'])
