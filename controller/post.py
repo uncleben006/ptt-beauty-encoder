@@ -108,7 +108,7 @@ def get_tags(event, user_id, comments):
             for i, c in enumerate(comment):
                 # 如果風格不符合以下這些標籤，就移除該則留言
                 if c['tag'] in ['可愛', '清秀', '年輕', '仙女', '健康', '騷包', '塑膠', '修圖', '素顏', '童顏',
-                                '女神', '美', '正', '普', '門', '推', '帥']:
+                                '女神', '美', '正', '普', '帥']:
                     print(c['tag'], end = ' ')
                     result_tags.append(c['tag'])
 

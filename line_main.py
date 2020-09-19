@@ -117,13 +117,13 @@ def handle_follow(event):
 
     # TODO: 把用戶資料存入資料庫
     # 開啟一個檔案, 將用戶個資轉成json 格式, 存入檔案內
-    with open("./user.txt", "a") as myfile:
-        myfile.write(
+    with open("./user.json", "a") as user_file:
+        user_file.write(
             json.dumps(
                 vars(user_profile)
             )
         )
-        myfile.write('\r\n')
+        user_file.write('\r\n')
     follow_text_message = TextSendMessage("HI! 歡迎使用~")
 
     line_bot_api.reply_message(
@@ -185,9 +185,7 @@ def handle_postback(event):
     print(postback)
 
     if postback == "action=main":
-        # 回主選單
         return_main(event)
-
         # delete redis which key prefix is user_id
         for key in r.scan_iter(user_id + ":*"):
             r.delete(key)
@@ -222,9 +220,6 @@ def handle_postback(event):
         star_img = r.get(user_id + ':star_img')
         star_name = r.get(user_id + ':star_name')
         star_distance = r.get(user_id + ':star_distance')
-        print(star_img)
-        print(star_name)
-        print(star_distance)
         get_star(event, user_id, star_img, star_name, star_distance, star_name_dict)
 
 
