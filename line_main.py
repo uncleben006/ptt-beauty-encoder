@@ -5,6 +5,8 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, ImageMessage, PostbackEvent,\
     ImageSendMessage, FlexSendMessage
+
+from helpers.utils import transfer_push_num
 from json_compare import beauty_compare, get_vector, datas_arrage, star_compare, star_datas_arrage
 import json
 import os
@@ -215,11 +217,9 @@ def handle_postback(event):
         if push_num:
             push_num = json.loads(push_num)
             for push in push_num:
-                # print(push)
-                if push == '爆':
-                    push = 99
-                if push == 'XX':
-                    push = -99
+                print(push)
+                push = transfer_push_num(push)
+
                 num += int(push)
             num = int(num / len(push_num))
             text = str(num)
