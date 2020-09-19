@@ -1,4 +1,4 @@
-def get_comments(comments):
+def get_comments_flex(comments):
     flex_message = {
         "type": "bubble",
         "hero": {

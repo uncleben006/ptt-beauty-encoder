@@ -4,7 +4,6 @@ import os
 import json
 import glob
 import redis
-import random
 from dotenv import load_dotenv
 
 # flask
@@ -16,13 +15,12 @@ from flask_paginate import Pagination, get_page_parameter
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextSendMessage, \
-    FollowEvent, ImageMessage, PostbackEvent, \
-    ImageSendMessage, FlexSendMessage
+    FollowEvent, ImageMessage, PostbackEvent
 
 # custom module
-from helpers.utils import transfer_push_num
+from controller.post import return_main, previous_menu, next_menu, get_push_number, get_comments, get_article, get_tags,\
+    get_photos, get_star
 from controller.image import beauty_compare, get_vector, datas_arrage, star_compare, star_datas_arrage, save_image
-from flex_messages.get_comments import get_comments
 
 # start app
 app = Flask(__name__)
@@ -187,168 +185,47 @@ def handle_postback(event):
     print(postback)
 
     if postback == "action=main":
-        line_bot_api.link_rich_menu_to_user(
-            user_id = event.source.user_id,
-            rich_menu_id = MAIN_RICH_MENU_ID
-        )
+        # 回主選單
+        return_main(event)
 
         # delete redis which key prefix is user_id
         for key in r.scan_iter(user_id + ":*"):
             r.delete(key)
 
     if postback == "action=next":
-        line_bot_api.link_rich_menu_to_user(
-            user_id = event.source.user_id,
-            rich_menu_id = SUB_RICH_MENU_ID_B
-        )
+        next_menu(event)
 
     if postback == "action=return":
-        line_bot_api.link_rich_menu_to_user(
-            user_id = event.source.user_id,
-            rich_menu_id = SUB_RICH_MENU_ID_A
-        )
+        previous_menu(event)
 
     if postback == "action=push_number":
         push_num = r.get(user_id + ':push_num')
-        num = 0
-        if push_num:
-            push_num = json.loads(push_num)
-            for push in push_num:
-                print(push)
-                push = transfer_push_num(push)
-
-                num += int(push)
-            num = int(num / len(push_num))
-            text = str(num)
-        else:
-            text = '0'
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
+        get_push_number(event, user_id, push_num)
 
     if postback == "action=comments":
         comments = r.get(user_id + ':comments')
-        if comments:
-            comments = json.loads(comments)
-            text = ''
-            result_comment = []
-
-            # 取出所有 po 文的留言
-            for comment in comments:
-                for i, c in enumerate(comment):
-                    if c['tag'] not in ['我婆', '戀愛', '女神', '美', '正', '普', '喜歡', '學生', '可以', '醜', '男的', '頭髮', '牙齒', '鼻子',
-                                        '門', '推', '誇張', '驚嘆']:
-                        comment.pop(i)
-                result_comment += comment
-
-            # 打亂並取 10 則留言出來當作留言
-            comments_flex_message = get_comments(random.sample(result_comment, 10))
-            line_bot_api.reply_message(event.reply_token,
-                                       FlexSendMessage(alt_text = '留言預測', contents = comments_flex_message))
-        else:
-            text = '沒有推文'
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
+        get_comments(event, user_id, comments)
 
     if postback == "action=article":
         slugs = r.get(user_id + ':post_slug')
-        if slugs:
-            slugs = json.loads(slugs)
-            text = ''
-            for slug in slugs[:3]:
-                text += 'https://www.ptt.cc/bbs/Beauty/' + slug.replace('_', '.') + '.html\n\n'
-            text = text[:-2]
-        else:
-            text = '沒有相似文章'
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
+        get_article(event, user_id, slugs)
 
     if postback == "action=tags":
         comments = r.get(user_id + ':comments')
-        if comments:
-            comments = json.loads(comments)
-            text = ''
-
-            result_tags = []
-            # 取出所有 po 文的留言
-            for comment in comments:
-                for i, c in enumerate(comment):
-                    # 如果風格不符合以下這些標籤，就移除該則留言
-                    if c['tag'] in ['可愛', '清秀', '年輕', '仙女', '健康', '騷包', '塑膠', '修圖', '素顏', '童顏',
-                                    '女神', '美', '正', '普', '門', '推', '帥']:
-                        print(c['tag'], end = ' ')
-                        result_tags.append(c['tag'])
-
-            # 找出所有留言的 tag 並且整理出風格平均
-            result_average = {}
-            for tag in set(result_tags):
-                score = round(result_tags.count(tag) / len(result_tags) * 100, 2)
-                result_average[tag] = score
-            result_average = sorted(result_average.items(), key = lambda item: item[1], reverse = True)
-
-            for tag, score in result_average:
-                text += tag + ': ' + str(score) + '%\n'
-            text = text[:-1]
-        else:
-            text = '無法預測風格'
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
+        get_tags(event, user_id, comments)
 
     if postback == "action=photo":
         img_url = r.get(user_id + ':img_url')
-        print(img_url)
-        if img_url:
-            img_url = json.loads(img_url)
-            text = '與下列圖片相似'
-            # TODO: 做成 ImageCarousel
-            line_bot_api.reply_message(
-                event.reply_token,
-                [
-                    TextSendMessage(text = text),
-                    ImageSendMessage(
-                        original_content_url = str(img_url[0]),
-                        preview_image_url = str(img_url[0])
-                    ),
-                    ImageSendMessage(
-                        original_content_url = str(img_url[1]),
-                        preview_image_url = str(img_url[1])
-                    ),
-                    ImageSendMessage(
-                        original_content_url = str(img_url[2]),
-                        preview_image_url = str(img_url[2])
-                    )
-                ]
-            )
-        else:
-            text = '沒有相似照片'
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text = text),
-            )
+        get_photos(event, user_id, img_url)
 
     if postback == "action=star":
-
         star_img = r.get(user_id + ':star_img')
         star_name = r.get(user_id + ':star_name')
         star_distance = r.get(user_id + ':star_distance')
         print(star_img)
         print(star_name)
         print(star_distance)
-        if star_img and star_name:
-            img_url = os.path.join(os.getenv('BASE_URL'), 'static', 'star_datas', star_name, star_img)
-            text = '你的臉與 ' + star_name_dict[star_name] + ' 最像\n\n相似度: ' + str(
-                round(((1 - float(star_distance)) * 100), 2)) + '%'
-            line_bot_api.reply_message(
-                event.reply_token,
-                [
-                    TextSendMessage(text = text),
-                    ImageSendMessage(
-                        original_content_url = str(img_url),
-                        preview_image_url = str(img_url)
-                    )
-                ]
-            )
-        else:
-            text = "找不到相似的明星"
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text = text),
-            )
+        get_star(event, user_id, star_img, star_name, star_distance, star_name_dict)
 
 
 if __name__ == "__main__":
