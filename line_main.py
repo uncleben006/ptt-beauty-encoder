@@ -34,7 +34,7 @@ SUB_RICH_MENU_ID_A = os.getenv('RICHMENU_2')
 SUB_RICH_MENU_ID_B = os.getenv('RICHMENU_3')
 
 # Load beauty data
-with open(os.path.join(os.getcwd(), 'datas/datas_light.json'), 'r', encoding = "utf-8") as jsonfile:
+with open(os.path.join(os.getcwd(), 'datas/datas_final.json'), 'r', encoding = "utf-8") as jsonfile:
     beauty_datas = datas_arrage(json.load(jsonfile))
 
 # Load star data
@@ -274,7 +274,7 @@ def handle_postback(event):
                 for i, c in enumerate(comment):
                     # 如果風格不符合以下這些標籤，就移除該則留言
                     if c['tag'] in ['可愛', '清秀', '年輕', '仙女', '健康', '騷包', '塑膠', '修圖', '素顏', '童顏',
-                                    '女神', '美', '正', '普', '男的', '門', '推']:
+                                    '女神', '美', '正', '普', '門', '推', '帥']:
                         print(c['tag'], end = ' ')
                         result_tags.append(c['tag'])
 
