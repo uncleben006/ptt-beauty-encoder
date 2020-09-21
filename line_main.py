@@ -219,8 +219,9 @@ def handle_postback(event):
         get_tags(event, user_id, comments)
 
     if postback == "action=photo":
+        post_title = r.get(user_id + ':post_title')
         img_url = r.get(user_id + ':img_url')
-        get_photos(event, user_id, img_url)
+        get_photos(event, user_id, img_url, post_title)
 
     if postback == "action=star":
         star_img = r.get(user_id + ':star_img')

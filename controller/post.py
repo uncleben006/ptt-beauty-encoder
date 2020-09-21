@@ -4,7 +4,8 @@ import os
 import random
 
 from dotenv import load_dotenv
-from linebot.models import TextSendMessage, FlexSendMessage, ImageSendMessage
+from linebot.models import TextSendMessage, FlexSendMessage, ImageSendMessage, TemplateSendMessage,\
+    URITemplateAction, ImageCarouselColumn, ImageCarouselTemplate, TemplateSendMessage
 
 from helpers.utils import transfer_push_num
 from flex_messages.get_comments import get_comments_flex
@@ -55,7 +56,7 @@ def get_push_number(event, user_id, push_num):
         num = int(num / len(push_num))
         text = str(num)
     else:
-        text = '0'
+        text = '無法預測推文數'
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
 # 取得預測留言: 依照前五篇相似文章隨機抽取
@@ -79,7 +80,7 @@ def get_comments(event, user_id, comments):
         line_bot_api.reply_message(event.reply_token,
                                    FlexSendMessage(alt_text = '留言預測', contents = comments_flex_message))
     else:
-        text = '沒有推文'
+        text = '無法預測留言'
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
 # 取得相似文章: 前三篇
@@ -92,7 +93,7 @@ def get_article(event, user_id, slugs):
             text += 'https://www.ptt.cc/bbs/Beauty/' + slug.replace('_', '.') + '.html\n\n'
         text = text[:-2]
     else:
-        text = '沒有相似文章'
+        text = '無法預測相似文章'
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
 # 取得風格標籤: 依照前五篇相似文章的平均分數
@@ -127,31 +128,64 @@ def get_tags(event, user_id, comments):
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text = text))
 
 # 取得類似圖片: 前三篇相似文章
-def get_photos(event, user_id, img_url):
+def get_photos(event, user_id, img_url, post_title):
 
     print(img_url)
     if img_url:
         img_url = json.loads(img_url)
-        text = '與下列圖片相似'
+        post_title = json.loads(post_title)
+        # text = '與下列圖片相似'
         # TODO: 做成 ImageCarousel
-        line_bot_api.reply_message(
-            event.reply_token,
-            [
-                TextSendMessage(text = text),
-                ImageSendMessage(
-                    original_content_url = str(img_url[0]),
-                    preview_image_url = str(img_url[0])
-                ),
-                ImageSendMessage(
-                    original_content_url = str(img_url[1]),
-                    preview_image_url = str(img_url[1])
-                ),
-                ImageSendMessage(
-                    original_content_url = str(img_url[2]),
-                    preview_image_url = str(img_url[2])
-                )
-            ]
+        # line_bot_api.reply_message(
+        #     event.reply_token,
+        #     [
+        #         TextSendMessage(text = text),
+        #         ImageSendMessage(
+        #             original_content_url = str(img_url[0]),
+        #             preview_image_url = str(img_url[0])
+        #         ),
+        #         ImageSendMessage(
+        #             original_content_url = str(img_url[1]),
+        #             preview_image_url = str(img_url[1])
+        #         ),
+        #         ImageSendMessage(
+        #             original_content_url = str(img_url[2]),
+        #             preview_image_url = str(img_url[2])
+        #         )
+        #     ]
+        # )
+
+        image_carousel = TemplateSendMessage(
+            alt_text = '與這些圖片相似',
+            template = ImageCarouselTemplate(
+                columns = [
+                    ImageCarouselColumn(
+                        image_url = str(img_url[0]),
+                        action = URITemplateAction(
+                            label = post_title[0][:12],
+                            uri = str(img_url[0])
+                        )
+                    ),
+                    ImageCarouselColumn(
+                        image_url = str(img_url[1]),
+                        action = URITemplateAction(
+                            label = post_title[1][:12],
+                            uri = str(img_url[1])
+                        )
+                    ),
+                    ImageCarouselColumn(
+                        image_url = str(img_url[2]),
+                        action = URITemplateAction(
+                            label = post_title[2][:12],
+                            uri = str(img_url[2])
+                        )
+                    )
+                ]
+            )
         )
+        line_bot_api.reply_message(event.reply_token, image_carousel)
+
+
     else:
         text = '沒有相似照片'
         line_bot_api.reply_message(
