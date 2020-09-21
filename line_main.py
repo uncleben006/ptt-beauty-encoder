@@ -71,6 +71,12 @@ def images():
     page = request.args.get(get_page_parameter(), type = int, default = 1)
     pagination = Pagination(page = page, total = len(images), record_name = 'images', bs_version = 4)
     url = os.getenv('BASE_URL')
+
+    # 依照時間排序
+    images_dict = {image: os.path.getmtime(image) for image in images}
+    images_dict = {k: v for k, v in sorted(images_dict.items(), key = lambda item: item[1])}
+    images = list(images_dict.keys())
+
     images = images[(page - 1) * pagination.per_page:page * pagination.per_page]
     return render_template('images.html', images = images, pagination = pagination, url = url, page = page,
                            password = password)
