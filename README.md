@@ -128,7 +128,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Email - uncleben006@gmail.com
 
-Project Link: [https://github.com/uncleben006/ptt-beauty-line-bot](https://github.com/uncleben006/ptt-beauty-line-bot)
+Project Link: [https://github.com/uncleben006/ptt-beauty-encoder](https://github.com/uncleben006/ptt-beauty-encoder)
 
 
 
@@ -152,20 +152,20 @@ Project Link: [https://github.com/uncleben006/ptt-beauty-line-bot](https://githu
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/uncleben006/ptt-beauty-line-bot.svg?style=flat-square
-[contributors-url]: https://github.com/uncleben006/ptt-beauty-line-bot/graphs/contributors
+[contributors-shield]: https://img.shields.io/github/contributors/uncleben006/ptt-beauty-encoder.svg?style=flat-square
+[contributors-url]: https://github.com/uncleben006/ptt-beauty-encoder/graphs/contributors
 
-[forks-shield]: https://img.shields.io/github/forks/uncleben006/ptt-beauty-line-bot.svg?style=flat-square
-[forks-url]: https://github.com/uncleben006/ptt-beauty-line-bot/network/members
+[forks-shield]: https://img.shields.io/github/forks/uncleben006/ptt-beauty-encoder.svg?style=flat-square
+[forks-url]: https://github.com/uncleben006/ptt-beauty-encoder/network/members
 
-[stars-shield]: https://img.shields.io/github/stars/uncleben006/ptt-beauty-line-bot.svg?style=flat-square
-[stars-url]: https://github.com/uncleben006/ptt-beauty-line-bot/stargazers
+[stars-shield]: https://img.shields.io/github/stars/uncleben006/ptt-beauty-encoder.svg?style=flat-square
+[stars-url]: https://github.com/uncleben006/ptt-beauty-encoder/stargazers
 
-[issues-shield]: https://img.shields.io/github/issues/uncleben006/ptt-beauty-line-bot.svg?style=flat-square
-[issues-url]: https://github.com/uncleben006/ptt-beauty-line-bot/issues
+[issues-shield]: https://img.shields.io/github/issues/uncleben006/ptt-beauty-encoder.svg?style=flat-square
+[issues-url]: https://github.com/uncleben006/ptt-beauty-encoder/issues
 
-[license-shield]: https://img.shields.io/github/license/uncleben006/ptt-beauty-line-bot.svg?style=flat-square
-[license-url]: https://github.com/uncleben006/ptt-beauty-line-bot/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/uncleben006/ptt-beauty-encoder.svg?style=flat-square
+[license-url]: https://github.com/uncleben006/ptt-beauty-encoder/blob/master/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/uncleben006
