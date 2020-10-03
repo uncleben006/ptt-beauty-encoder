@@ -36,7 +36,7 @@
     <br />
     <br />
     <strong>Play on linebot</strong>
-    <p align="left"><img src="images/qrcode.png" alt="Logo" width="80" height="80"></p>
+    <p align="left"><img src="static/qrcode.png" alt="Logo" width="80" height="80"></p>
     <br />
   </p>
 </p>
