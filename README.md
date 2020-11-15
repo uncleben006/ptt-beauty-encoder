@@ -147,7 +147,7 @@ Project Link: [https://github.com/uncleben006/ptt-beauty-encoder](https://github
 * [Font Awesome](https://fontawesome.com)
 -->
 
-
+<img data-no-retina="true" src="https://images.cakeresume.com/rgnVr/9380ff/42ec73bd-f584-4d83-bd41-b7947c0628d5.png" alt="Paragraph image 01 00@2x" data-uploader-id="7" data-state="empty" style="border-radius: 0px;">
 
 
 <!-- MARKDOWN LINKS & IMAGES -->

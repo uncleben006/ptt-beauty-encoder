@@ -14,3 +14,6 @@ docker run -it -d --name beauty-line-bot \
 -v ~/letsencrypt:/etc/letsencrypt \
 uncleben006/beauty-line-bot bash
 
+rm .env
+mv .env-prod .env
+
